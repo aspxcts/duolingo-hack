@@ -9,7 +9,7 @@ import time
 import re
 
 reader = easyocr.Reader(["en", "es"])
-mon = {'top': 267, 'left': 585, 'width': 550, 'height': 200}
+mon = {'top': 267, 'left': 585, 'width': 600, 'height': 200}
 
 
 def extractword(input_string):
@@ -22,8 +22,17 @@ def extractword(input_string):
     else:
         return None
 
+def replace_letter(input_string):
+    if input_string:
+        first_letter = input_string[0]
+        lower_first_letter = first_letter.lower()
+        modified_string = lower_first_letter + input_string[1:]
+        return modified_string
+    else:
+        return input_string
 
-def howtosayword():
+
+def whichone():
     with mss.mss() as sct:
         while True:
             url = "https://api.mymemory.translated.net/get?q="
@@ -47,10 +56,12 @@ def howtosayword():
 
             translatedtext = response_json['responseData']['translatedText']
             print(translatedtext)
+            lowercasetranslatedtext = replace_letter(translatedtext)
+            print(lowercasetranslatedtext)
 
             with mss.mss() as scts:
                 while True:
-                    mon2 = {'top': 468, 'left': 652, 'width': 600, 'height': 200}
+                    mon2 = {'top': 600, 'left': 628, 'width': 600, 'height': 200}
                     im2 = numpy.asarray(scts.grab(mon2))
                     options = reader.readtext(im2, detail=0)
                     print(options)
@@ -59,7 +70,7 @@ def howtosayword():
             index = 0
             for option in options:
                 print(index)
-                if translatedtext in options[index]:
+                if lowercasetranslatedtext in options[index]:
                     print("found word ", options[index])
                     writeable = index + 1
                     writeable = str(writeable)
