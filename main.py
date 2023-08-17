@@ -10,6 +10,7 @@ from QListenHear import listenandhear
 from QTypeES import typeinspanish
 from QFillintheblanks import fillintheblanks
 from QTypeEN import typeinenglish
+from QHowToSay import howtosayword
 
 import cv2
 import pyautogui
@@ -78,12 +79,15 @@ duolingo_spanish_words2 = (
     "pensar sentir hacer conocer dejar amar llamar"
 )
 
-listeningkeywords = ("LISTEN speak hear CAN'T NoW")
-writethisinspanishkeywords = ("Type")
-fillinthebankskeywords = ("Fill Blanks")
-writethisinenglishkeywords = ("English")
+listeninghearing = ("Type what you hear")
+writeinspanish = ("Write this in Spanish")
+fillintheblanks = ("Fill In The blank")
+writeinenglish = ("Write this in English")
+howtosay = ("How do you say")
+whichone = ("Which one of these is")
+selectpairs = ("Select the matching pairs")
 
-mon = {'top': 0, 'left': 0, 'width': 1920, 'height': 1080}
+mon = {'top': 267, 'left': 585, 'width': 600, 'height': 100}
 reader = easyocr.Reader(['en', 'es'])
 
 
@@ -92,39 +96,33 @@ def mainscript():
         while True:
             im = numpy.asarray(sct.grab(mon))
 
-            resultstring = ""
+            sep = ""
             readerresult = reader.readtext(im, detail=0)
             print(readerresult)
-
-            for item in readerresult:
-                resultstring += item + " "
-            resultstring = resultstring.rstrip()
-            result = resultstring.split()
-            listenwordlist = listeningkeywords.split()
-            writeESwordlist = writethisinspanishkeywords.split()
-            fillintheblankswordlist = fillinthebankskeywords.split()
-            writeENwordlist = writethisinenglishkeywords.split()
+            result = sep.join(readerresult)
+            print(result)
 
             index = 0
             while index < len(result):
                 time.sleep(0.01)
                 print(index)
-                print(result[index])
-                print(result)
                 if len(result) <= 0:
                     break
-                if result[index] in listenwordlist:
-                    print("found word: ", result[index])
+                if listeninghearing in result:
+                    print("found phrase: listeninghearing: T", listeninghearing)
                     listenandhear(579, 1007, 1333, 1002)
-                if result[index] in writeESwordlist:
-                    print("found word: ", result[index])
+                if writeinspanish in result:
+                    print("found phrase: writeinspanish: ", writeinspanish)
                     typeinspanish()
-                if result[index] in fillintheblankswordlist:
-                    print("found word ", result[index])
+                if fillintheblanks in result:
+                    print("found phrase: fillintheblanks: ", fillintheblanks)
                     fillintheblanks()
-                if result[index] in writeENwordlist:
-                    print("found word ", result[index])
+                if writeinenglish in result:
+                    print("found phrase: writeinenglish: ", writeinenglish)
                     typeinenglish()
+                if howtosay in result:
+                    print("found phrase: howtosay: ", howtosay)
+                    howtosayword()
                 else:
                     print("could not find word")
                     index += 1
