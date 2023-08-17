@@ -1,0 +1,9 @@
+easyocr
+numpy
+mss
+cv2
+time
+re
+pyautogui
+tkinter
+requests
