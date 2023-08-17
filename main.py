@@ -10,6 +10,7 @@ from QTypeES import typeinspanish
 from QFillintheblanks import fillintheblanks
 from QTypeEN import typeinenglish
 from QHowToSay import howtosayword
+from QWhichOne import whichone
 
 import cv2
 import pyautogui
@@ -81,9 +82,9 @@ listeninghearing = ("Type what you hear")
 writeinspanish = ("Write this in Spanish")
 fillintheblanks = ("Fill In The blank")
 writeinenglish = ("Write this in English")
-howtosay = ("How do you say")
-whichone = ("Which one of these is")
-selectpairs = ("Select the matching pairs")
+howtosaykeys = ("How do you say")
+whichonekeys = ("Which one of these is")
+selectpairskeys = ("Select the matching pairs")
 
 mon = {'top': 267, 'left': 585, 'width': 600, 'height': 100}
 reader = easyocr.Reader(['en', 'es'])
@@ -107,7 +108,7 @@ def mainscript():
                 if len(result) <= 0:
                     break
                 if listeninghearing in result:
-                    print("found phrase: listeninghearing: T", listeninghearing)
+                    print("found phrase: listeninghearing: ", listeninghearing)
                     listenandhear(579, 1007, 1333, 1002)
                 if writeinspanish in result:
                     print("found phrase: writeinspanish: ", writeinspanish)
@@ -118,9 +119,12 @@ def mainscript():
                 if writeinenglish in result:
                     print("found phrase: writeinenglish: ", writeinenglish)
                     typeinenglish()
-                if howtosay in result:
-                    print("found phrase: howtosay: ", howtosay)
+                if howtosaykeys in result:
+                    print("found phrase: howtosay: ", howtosaykeys)
                     howtosayword()
+                if whichonekeys in result:
+                    print("found phrase: whichone ", whichonekeys)
+                    whichone()
                 else:
                     print("could not find word")
                     index += 1
