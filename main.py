@@ -2,7 +2,6 @@ import easyocr
 import time
 import mss
 import numpy
-import openai
 import requests
 import json
 import tkinter
@@ -15,7 +14,6 @@ from QHowToSay import howtosayword
 import cv2
 import pyautogui
 
-openai.my_api_key = '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'
 # pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 duolingo_spanish_words = (
