@@ -17,6 +17,14 @@ def removefirstword(input_string):
     new_string = ' '.join(words[1:])
     return new_string
 
+def replace_letter(input_string):
+    if input_string:
+        first_letter = input_string[0]
+        lower_first_letter = first_letter.lower()
+        modified_string = lower_first_letter + input_string[1:]
+        return modified_string
+    else:
+        return input_string
 
 def extractword(input_string):
     pattern = r'"([^"]*)"'
@@ -29,7 +37,7 @@ def extractword(input_string):
         return None
 
 
-def extract(input_string, target_word):
+def extractworddif(input_string, target_word):
     index = input_string.find(target_word)
     if index != -1:
         extracted_content = input_string[index + len(target_word):]
@@ -57,7 +65,7 @@ def howtosayword():
 
             if extractedword is None:
                 print("could not extract through normal methods, resorting to last method")
-                extractedword = extract(texttotranslate, target_word)
+                extractedword = extractworddif(texttotranslate, target_word)
 
             url += str(extractedword)
             url += "&langpair=en|es"
@@ -67,6 +75,8 @@ def howtosayword():
             response_json = response.json()
 
             translatedtext = response_json['responseData']['translatedText']
+            print(translatedtext)
+            translatedtext = replace_letter(translatedtext)
             print(translatedtext)
 
             if mainindex > 0:
@@ -96,7 +106,9 @@ def howtosayword():
                     pyautogui.leftClick()
                     pyautogui.leftClick()
                     from main import mainscript
+                    print("imported")
                     mainscript()
+                    print("scrip ran")
                 else:
                     print("couldnt find word")
                     index += 1
