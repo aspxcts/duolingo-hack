@@ -12,6 +12,12 @@ reader = easyocr.Reader(["en", "es"])
 mon = {'top': 267, 'left': 585, 'width': 550, 'height': 200}
 
 
+def removefirstword(input_string):
+    words = input_string.split()
+    new_string = ' '.join(words[1:])
+    return new_string
+
+
 def extractword(input_string):
     pattern = r'"([^"]*)"'
     match = re.search(pattern, input_string)
@@ -23,9 +29,20 @@ def extractword(input_string):
         return None
 
 
+def extract(input_string, target_word):
+    index = input_string.find(target_word)
+    if index != -1:
+        extracted_content = input_string[index + len(target_word):]
+        return extracted_content
+    else:
+        return None
+
+
 def howtosayword():
     with mss.mss() as sct:
+        mainindex = 0
         while True:
+            target_word = "say"
             url = "https://api.mymemory.translated.net/get?q="
             sep = ''
             im = numpy.asarray(sct.grab(mon))
@@ -38,6 +55,10 @@ def howtosayword():
             extractedword = extractword(inputstring)
             print("extracted word ", extractedword)
 
+            if extractedword is None:
+                print("could not extract through normal methods, resorting to last method")
+                extractedword = extract(texttotranslate, target_word)
+
             url += str(extractedword)
             url += "&langpair=en|es"
             print(url)
@@ -47,6 +68,11 @@ def howtosayword():
 
             translatedtext = response_json['responseData']['translatedText']
             print(translatedtext)
+
+            if mainindex > 0:
+                print("could not answer question using default settings, changing methods")
+                translatedtext = removefirstword(translatedtext)
+                print(translatedtext)
 
             with mss.mss() as scts:
                 while True:
@@ -59,6 +85,8 @@ def howtosayword():
             index = 0
             for option in options:
                 print(index)
+                if index >= 2:
+                    mainindex += 1
                 if translatedtext in options[index]:
                     print("found word ", options[index])
                     writeable = index + 1
@@ -66,11 +94,9 @@ def howtosayword():
                     pyautogui.write(writeable)
                     pyautogui.moveTo(1334, 1003, duration=1)
                     pyautogui.leftClick()
-                    # pyautogui.leftClick()
+                    pyautogui.leftClick()
+                    from main import mainscript
+                    mainscript()
                 else:
                     print("couldnt find word")
                     index += 1
-
-        time.sleep(0.2)
-        from main import mainscript
-        mainscript()
