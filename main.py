@@ -22,6 +22,7 @@ from QWhichOne import whichone
 openai.api_type = "azure"
 openai.api_version = "2023-05-15"
 
+selectpairkeys = ("Select the matching pairs")
 listeninghearing = ("Type what you hear")
 speakthissentence = ("Speak this sentence")
 writeinspanish = ("Write this in Spanish")
@@ -72,6 +73,9 @@ def mainscript():
                     whichone()
                 if speakthissentence in result:
                     print("found phrase: speakthissentence ", speakthissentence)
+                    listenandhear(579, 1007, 1333, 1002)
+                if selectpairkeys in result:
+                    print("found phrase: selectpairs ", selectpairkeys)
                     listenandhear(579, 1007, 1333, 1002)
                 else:
                     print("could not find word")
