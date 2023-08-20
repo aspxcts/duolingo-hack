@@ -22,30 +22,20 @@ Here are your sentences:
 '''
 prompt = str(prompt)
 
-
 reader = easyocr.Reader(["en", "es"])
 mon = {'top': 370, 'left': 629, 'width': 600, 'height': 150}
 
-def extractword(input_string):
-    pattern = r'"([^"]*)"'
-    match = re.search(pattern, input_string)
 
-    if match:
-        extracted_word = match.group(1)
-        return extracted_word
-    else:
-        return None
-
-
-def createsentence():
+def single_last_word():
     with mss.mss() as sct:
         mon2 = {'top': 500, 'left': 854, 'width': 300, 'height': 500}
         while True:
-            url = "https://api.mymemory.translated.net/get?q="
             sep = ''
             sepspace = ' '
             im = numpy.asarray(sct.grab(mon))
             sentence = reader.readtext(im, detail=0)
+            sep = ''
+            sepspace = ' '
             print(sentence)
             stringsentence = sep.join(sentence)
             print(stringsentence)
@@ -64,15 +54,57 @@ def createsentence():
                 mainprompt += "\n"
                 print(mainprompt)
 
-
-
-
             sentencecheck = openai.ChatCompletion.create(
-                engine="gpt-35-turbo",  # engine = "deployment_name".
+                engine="gpt-35-turbo",
                 messages=[
                     {"role": "user", "content": mainprompt}
-                ]
-            )
+            ]
+        )
+            print(sentencecheck['choices'][0]['message']['content'])
+            sentencecheck = str(sentencecheck['choices'][0]['message']['content'])
+
+            pyautogui.write(sentencecheck)
+            pyautogui.moveTo(1334, 1003, duration=1)
+            pyautogui.leftClick()
+            pyautogui.leftClick()
+
+            from main import mainscript
+            mainscript()
+
+def single_middle_word():
+    with mss.mss() as sct:
+        mon2 = {'top': 500, 'left': 854, 'width': 300, 'height': 500}
+        while True:
+            sep = ''
+            sepspace = ' '
+            im = numpy.asarray(sct.grab(mon))
+            sentence = reader.readtext(im, detail=0)
+            sep = ''
+            sepspace = ' '
+            print(sentence)
+            stringsentence = sep.join(sentence)
+            print(stringsentence)
+            im2 = numpy.asarray(sct.grab(mon2))
+            options = reader.readtext(im2, detail=0)
+            print(options)
+            stringoptions = sepspace.join(options)
+            print(stringoptions)
+            mainprompt = prompt
+            for option in options:
+                fullsentence = ''
+                fullsentence += stringsentence
+                fullsentence += ' '
+                fullsentence += option
+                mainprompt += fullsentence
+                mainprompt += "\n"
+                print(mainprompt)
+
+            sentencecheck = openai.ChatCompletion.create(
+                engine="gpt-35-turbo",
+                messages=[
+                    {"role": "user", "content": mainprompt}
+            ]
+        )
             print(sentencecheck['choices'][0]['message']['content'])
             sentencecheck = str(sentencecheck['choices'][0]['message']['content'])
 
@@ -85,6 +117,20 @@ def createsentence():
             mainscript()
 
 
+def createsentence():
+    with mss.mss() as sct:
+        mon2 = {'top': 500, 'left': 854, 'width': 300, 'height': 500}
+        while True:
+            url = "https://api.mymemory.translated.net/get?q="
+            sep = ''
+            sepspace = ' '
+            im = numpy.asarray(sct.grab(mon))
+            sentence = reader.readtext(im, detail=0)
+
+            if len(sentence) == 0:
+                single_last_word()
+            if len(sentence) > 0:
+                single_middle_word()
 
             # texttotranslate = sep.join(readerresult)
 
@@ -92,11 +138,6 @@ def createsentence():
 def fillintheblanksmethod():
     with mss.mss() as sct:
         while True:
-            url = "https://api.mymemory.translated.net/get?q="
-            sep = ''
-            im = numpy.asarray(sct.grab(mon))
-            sentence = reader.readtext(im, detail=0)
-            # print(sentence)
             createsentence()
 
             # texttotranslate = sep.join(readerresult)
