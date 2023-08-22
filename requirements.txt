@@ -1,0 +1,7 @@
+easyocr
+numpy
+mss
+opencv-python
+pyautogui
+tk
+requests
