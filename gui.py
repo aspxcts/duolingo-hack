@@ -22,6 +22,7 @@ def main():
     killbutton = tk.Button(root, text="KILL", bg="red", fg="white", padx=350, pady=50, font=("Helvetica", 14),
                            command=kill)
     killbutton.place(x=20, y=20)
+    res1200 = tk.Button(root, text="1980x1200", bg="white", fg="black", padx=50, pady=50, font=("Helvetica", 14))
     res1080 = tk.Button(root, text="1980x1080", bg="white", fg="black", padx=50, pady=50, font=("Helvetica", 14))
     res1200.place(x=40, y=200)
     res1080.place(x=550, y=200)
