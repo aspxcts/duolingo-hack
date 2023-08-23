@@ -5,7 +5,7 @@ import numpy
 import easyocr
 import time
 
-checkbutton = 1340, 1131
+checkbutton1200 = 1340, 1131
 reader = easyocr.Reader(["en", "es"])
 mon = {'left': 752, 'top': 403, 'width': 590, 'height': 170}
 
@@ -91,8 +91,6 @@ contraction_dict = {
     "you've": "you have"
 }
 
-contractions_upper = ' '.join([word.capitalize() for word in contraction_dict.strip().split()])
-
 def typeinenglish():
     with mss.mss() as sct:
         while True:
@@ -112,6 +110,11 @@ def typeinenglish():
             translatedtext = response_json['responseData']['translatedText']
             print(url)
             print(translatedtext)
+
+            pyautogui.write(translatedtext)
+            pyautogui.moveTo(checkbutton1200, duration=1)
+            pyautogui.leftClick()
+            pyautogui.leftClick()
 
             time.sleep(0.2)
             from main import mainscript
