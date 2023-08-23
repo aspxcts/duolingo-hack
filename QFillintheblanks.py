@@ -192,7 +192,7 @@ def single_middle_word():
                     {"role": "user", "content": mainprompt}
                 ]
             )
-            print("next print is chatgpt response from single middle word")
+            print("next print is chatgpt response from singlemiddleword")
             print(sentencecheck['choices'][0]['message']['content'])
             sentencecheck = int(sentencecheck['choices'][0]['message']['content'])
 
