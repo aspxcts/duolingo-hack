@@ -27,8 +27,17 @@ your answer should only contain a number
 could you respond with nothing, not even the sentences, just the format
 Here are your sentences:  
 '''
+singlemiddlewordprompt = '''
+Which one of these sentences makes the most sense? Please respond in the following format:
+Sentence number of the sentence that makes the most sense, starting from 1 (if two or more sentences make somewhat sense, pick the one that makes the most sense)
+your answer should only contain a number
+could you respond with nothing, not even the sentences, just the format
+Here are your sentences:  
+'''
+
 lastwordprompt = str(lastwordprompt)
 middletwowordprompt = str(lastwordprompt)
+singlemiddlewordprompt = str(singlemiddlewordprompt)
 
 checkbutton = 1340, 1131
 
@@ -41,6 +50,14 @@ def cycle_through_lists(sentence, options):
     result1 = sentence[0] + ' ' + options[0] + ' ' + sentence[1] + ' ' + options[1] + ' ' + sentence[2]
     result2 = sentence[0] + ' ' + options[1] + ' ' + sentence[1] + ' ' + options[0] + ' ' + sentence[2]
     return result1, result2
+
+def generate_sentences(sentence, options):
+    results = []
+    for word in options:
+        new_sentence = sentence.copy()
+        new_sentence.insert(1, word)
+        results.append(' '.join(new_sentence))
+    return tuple(results)
 
 
 def single_last_word():
@@ -74,6 +91,7 @@ def single_last_word():
                     {"role": "user", "content": mainprompt}
                 ]
             )
+            print("next print is chatgpt answer")
             print(sentencecheck['choices'][0]['message']['content'])
             sentencecheck = str(sentencecheck['choices'][0]['message']['content'])
 
@@ -117,6 +135,7 @@ def double_middle_word():
                     {"role": "user", "content": mainprompt}
                 ]
             )
+            print("next print is chatgpt response from double middle word")
             print(sentencecheck['choices'][0]['message']['content'])
             sentencecheck = int(sentencecheck['choices'][0]['message']['content'])
 
@@ -142,27 +161,71 @@ def double_middle_word():
             from main import mainscript
             mainscript()
 
+def single_middle_word():
+    with mss.mss() as sct:
+        while True:
+            im = numpy.asarray(sct.grab(mon))
+            sentence = reader.readtext(im, detail=0)
+            sep = ''
+            sepspace = ' '
+            print(sentence)
+            stringsentence = sep.join(sentence)
+            print(stringsentence)
+            im2 = numpy.asarray(sct.grab(mon2))
+            optionables = reader.readtext(im2, detail=0)
+            print(optionables)
+            stringoptions = sepspace.join(optionables)
+            print(stringoptions)
+            mainprompt = singlemiddlewordprompt
+
+            result1, result2, result3 = generate_sentences(sentence, optionables)
+            mainprompt += result1
+            mainprompt += '\n'
+            mainprompt += result2
+            mainprompt += '\n'
+            mainprompt += result3
+            print(mainprompt)
+
+            sentencecheck = openai.ChatCompletion.create(
+                engine="gpt-35-turbo",
+                messages=[
+                    {"role": "user", "content": mainprompt}
+                ]
+            )
+            print("next print is chatgpt response from single middle word")
+            print(sentencecheck['choices'][0]['message']['content'])
+            sentencecheck = int(sentencecheck['choices'][0]['message']['content'])
+
+            pyautogui.write(sentencecheck)
+            pyautogui.moveTo(checkbutton, duration=1)
+            pyautogui.leftClick()
+            pyautogui.leftClick()
+
+            from main import mainscript
+            mainscript()
+
 
 def createsentence():
     with mss.mss() as sct:
         while True:
-            url = "https://api.mymemory.translated.net/get?q="
-            sep = ''
-            sepspace = ' '
             im = numpy.asarray(sct.grab(mon))
             sentence = reader.readtext(im, detail=0)
+            im2 = numpy.asarray(sct.grab(mon2))
+            options = reader.readtext(im2, detail=0)
 
             if len(sentence) == 0:
                 single_last_word()
+            if len(sentence) == 4:
+                single_middle_word()
             if len(sentence) > 0:
-                double_middle_word()
+                if len(options) == 3:
+                    single_last_word()
+                if len(options) < 2:
+                    double_middle_word()
 
-            # texttotranslate = sep.join(readerresult)
 
 
 def fillintheblanksmethod():
     with mss.mss() as sct:
         while True:
             createsentence()
-
-            # texttotranslate = sep.join(readerresult)
