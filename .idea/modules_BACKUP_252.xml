@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
+      <module fileurl="file://$PROJECT_DIR$/.idea/DuolingoHack.iml" filepath="$PROJECT_DIR$/.idea/DuolingoHack.iml" />
+=======
       <module fileurl="file://$PROJECT_DIR$/.idea/easyocr.iml" filepath="$PROJECT_DIR$/.idea/easyocr.iml" />
+>>>>>>> 2e2b93606d68654e794abe91e4dbe3ed8f830319
     </modules>
   </component>
 </project>
